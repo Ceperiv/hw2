@@ -1,37 +1,56 @@
+import React from "react";
 import './App.css';
 import Character from "./components/Сharacter";
 
+class App extends React.Component {
 
-async function getInfo(link) {
-    try {
-        let response = await fetch(link);
-        let responseResult = await response.json();
-        if (response.ok) {
-            for (const item of [responseResult]) {
-                // console.log(responseResult)
-                console.log(item.name)
-                return (
-                    <Character
-                        userId={item.id}
-                        userName={item.name}
-                    />
-                )
-            }
-        }
-    } catch (err) {
-        console.warn(err)
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            items: [],
+            DataIsLoaded: false
+        };
     }
-}
-getInfo('https://rickandmortyapi.com/api/character/1')
 
-function App() {
-    return(
-        <Character
-            userId={item.id}
-            userName={item.name}
-        />
-    )
-}
+    componentDidMount() {
+        fetch(
+            "https://rickandmortyapi.com/api/character")
+            .then((value) => value.json())
+            .then((value) => {
+                this.setState({
+                    items: value.results.slice(0, 8),
+                    DataIsLoaded: true
+                });
+            })
 
+    }
+
+
+    render() {
+        const {DataIsLoaded, items} = this.state;
+        if (!DataIsLoaded) return <div>
+            <h1 className={'wait'}> Please wait.... </h1></div>;
+
+        return items.map((value) => {
+            console.log(value);
+            return (
+
+                // <p>{value.name}</p>
+                <Character
+                    userId={value.id}
+                    userName={value.name}
+                    status={value.status}
+                    species={value.species}
+                    gender={value.gender}
+                    image={value.image}
+
+                />
+            )
+        })
+    }
+
+    // catch (err) {console.warn(err)}
+}
 
 export default App;
