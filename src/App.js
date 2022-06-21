@@ -1,25 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import Character from "./components/Сharacter";
+
+
+async function getInfo(link) {
+    try {
+        let response = await fetch(link);
+        let responseResult = await response.json();
+        if (response.ok) {
+            for (const item of [responseResult]) {
+                // console.log(responseResult)
+                console.log(item.name)
+                return (
+                    <Character
+                        userId={item.id}
+                        userName={item.name}
+                    />
+                )
+            }
+        }
+    } catch (err) {
+        console.warn(err)
+    }
+}
+getInfo('https://rickandmortyapi.com/api/character/1')
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return(
+        <Character
+            userId={item.id}
+            userName={item.name}
+        />
+    )
 }
+
 
 export default App;
